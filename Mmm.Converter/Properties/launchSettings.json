@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Mmm.Converter": {
+      "commandName": "Project",
+      "commandLineArgs": "--from-file \"D:\\Temp\\finance\\debug\\debug.mmb\" --from-format mmex --to-file \"D:\\Temp\\finance\\debug\\debug.fydb\" --to-format bcoin"
+    }
+  }
+}
