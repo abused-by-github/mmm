@@ -33,7 +33,7 @@ namespace Mmm.Domain
                 throw new Exception($"Unknown currency {currencyTo}");
             }
 
-            return _rates[currencyFrom] / _rates[currencyTo];
+            return _rates[currencyTo] / _rates[currencyFrom];
         }
     }
 }

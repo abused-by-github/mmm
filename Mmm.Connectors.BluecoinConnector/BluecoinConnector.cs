@@ -13,7 +13,7 @@ namespace Mmm.Connectors.BluecoinConnector
 {
     public class BluecoinConnector : IConnector
     {
-        private const decimal TransactionAmountFactor = 1000000;
+        private const long TransactionAmountFactor = 1000000;
 
         private readonly CurrencyExchange _currencyExchange;
 
@@ -250,7 +250,7 @@ namespace Mmm.Connectors.BluecoinConnector
                         void setAmount(TRANSACTIONSTABLE t, decimal tranAmount, string amountCurrency)
                         {
                             t.conversionRateNew = _currencyExchange.GetRate(defaultCurrency, amountCurrency);
-                            t.amount = (long)(decimal.Round(tranAmount / t.conversionRateNew, 2) * TransactionAmountFactor);
+                            t.amount = (long) decimal.Round(tranAmount / t.conversionRateNew * TransactionAmountFactor);
                             t.transactionCurrency = amountCurrency;
                         }
 
