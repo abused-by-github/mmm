@@ -246,16 +246,13 @@ namespace Mmm.Connectors.BluecoinConnector
 
                     foreach (var transaction in database.Transactions)
                     {
-                        var dateFrom = transaction.Date.AddSeconds(-2);
-                        var dateTo = transaction.Date.AddSeconds(2);
-                        var amount = transaction.FromAmount == 0 ? transaction.ToAmount : transaction.FromAmount;
-                        amount *= TransactionAmountFactor;
-                        var currency = transaction.FromAccount?.CurrencyCode ?? transaction.ToAccount?.CurrencyCode ?? "*";
-                        var existingTransaction = connection.Query<TRANSACTIONSTABLE>(
-                            "SELECT * FROM TRANSACTIONSTABLE WHERE date BETWEEN @dateFrom AND @dateTo AND amount = @amount AND transactionCurrency = @currency",
-                            new { dateFrom, dateTo, amount, currency }).FirstOrDefault();
-
-                        if (existingTransaction != null) continue;
+                        //TODO: duplicate check
+                        void setAmount(TRANSACTIONSTABLE t, decimal tranAmount, string amountCurrency)
+                        {
+                            t.conversionRateNew = _currencyExchange.GetRate(defaultCurrency, amountCurrency);
+                            t.amount = (long)(decimal.Round(tranAmount / t.conversionRateNew, 2) * TransactionAmountFactor);
+                            t.transactionCurrency = amountCurrency;
+                        }
 
                         if (transaction.Type == TransactionType.Adjustment)
                         {
@@ -271,13 +268,12 @@ namespace Mmm.Connectors.BluecoinConnector
                                 accountID = accounts.Single(a => a.MmmAccount == transaction.FromAccount).accountsTableID,
                                 accountPairID = accounts.Single(a => a.MmmAccount == transaction.FromAccount).accountsTableID,
                                 notes = transaction.Notes,
-                                status = 0, //TODO: meaning is not clear
+                                status = 2, //TODO: meaning is not clear
                                 deletedTransaction = 6, //TODO: meaning is not clear
-                                conversionRateNew = 1,
-                                amount = transaction.FromAmount * TransactionAmountFactor,
                                 date = transaction.Date,
-                                accountReference = 1
+                                accountReference = 3,
                             };
+                            setAmount(tran, transaction.FromAmount, transaction.FromAccount.CurrencyCode);
 
                             tran.transactionsTableID = tran.uidPairID = nextID<TRANSACTIONSTABLE>();
                             connection.Insert(tran);
@@ -295,16 +291,14 @@ namespace Mmm.Connectors.BluecoinConnector
                                 notes = transaction.Notes,
                                 status = 0, //TODO: meaning is not clear
                                 deletedTransaction = 6, //TODO: meaning is not clear
-                                conversionRateNew = 1,
-                                amount = -transaction.FromAmount * TransactionAmountFactor,
-                                transactionCurrency = transaction.FromAccount.CurrencyCode,
                                 date = transaction.Date,
                                 accountReference = 2 //TODO
                             };
+                            setAmount(tran, -transaction.FromAmount, transaction.FromAccount.CurrencyCode);
 
                             tran.itemID = item.itemTableID = nextID<ITEMTABLE>();
                             connection.Insert(item);
-                            tran.transactionsTableID = tran.uidPairID = tran.transferGroupID = nextID<TRANSACTIONSTABLE>();
+                            tran.transactionsTableID = tran.transferGroupID = nextID<TRANSACTIONSTABLE>();
                             connection.Insert(tran);
 
                             var tran2 = new TRANSACTIONSTABLE
@@ -318,14 +312,12 @@ namespace Mmm.Connectors.BluecoinConnector
                                 notes = transaction.Notes,
                                 status = 0, //TODO: meaning is not clear
                                 deletedTransaction = 6, //TODO: meaning is not clear
-                                conversionRateNew = transaction.FromAmount / transaction.ToAmount,
-                                amount = transaction.FromAmount * TransactionAmountFactor,
-                                transactionCurrency = transaction.ToAccount.CurrencyCode,
                                 uidPairID = tran.transactionsTableID,
                                 transferGroupID = tran.transactionsTableID,
                                 date = transaction.Date,
                                 accountReference = 2 //TODO
                             };
+                            setAmount(tran2, transaction.ToAmount, transaction.ToAccount.CurrencyCode);
                             tran2.transactionsTableID = tran.uidPairID = nextID<TRANSACTIONSTABLE>();
                             connection.Insert(tran2);
 
@@ -345,12 +337,10 @@ namespace Mmm.Connectors.BluecoinConnector
                                 notes = transaction.Notes,
                                 status = 0, //TODO: meaning is not clear
                                 deletedTransaction = 6, //TODO: meaning is not clear
-                                conversionRateNew = 1,
-                                amount = transaction.ToAmount * TransactionAmountFactor,
-                                transactionCurrency = transaction.ToAccount.CurrencyCode,
                                 date = transaction.Date,
                                 accountReference = 1 //TODO
                             };
+                            setAmount(tran, transaction.ToAmount, transaction.ToAccount.CurrencyCode);
 
                             tran.itemID = item.itemTableID = nextID<ITEMTABLE>();
                             connection.Insert(item);
@@ -371,12 +361,10 @@ namespace Mmm.Connectors.BluecoinConnector
                                 notes = transaction.Notes,
                                 status = 0, //TODO: meaning is not clear
                                 deletedTransaction = 6, //TODO: meaning is not clear
-                                conversionRateNew = 1,
-                                amount = -transaction.FromAmount * TransactionAmountFactor,
-                                transactionCurrency = transaction.FromAccount.CurrencyCode,
                                 date = transaction.Date,
                                 accountReference = 1 //TODO
                             };
+                            setAmount(tran, -transaction.FromAmount, transaction.FromAccount.CurrencyCode);
 
                             tran.itemID = item.itemTableID = nextID<ITEMTABLE>();
                             connection.Insert(item);

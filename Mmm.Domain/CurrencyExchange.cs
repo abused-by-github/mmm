@@ -21,6 +21,8 @@ namespace Mmm.Domain
 
         public decimal GetRate(string currencyFrom, string currencyTo)
         {
+            if (currencyFrom == currencyTo) return 1;
+
             if (!_rates.ContainsKey(currencyFrom))
             {
                 throw new Exception($"Unknown currency {currencyFrom}");
@@ -31,7 +33,7 @@ namespace Mmm.Domain
                 throw new Exception($"Unknown currency {currencyTo}");
             }
 
-            return _rates[currencyTo] / _rates[currencyFrom];
+            return _rates[currencyFrom] / _rates[currencyTo];
         }
     }
 }

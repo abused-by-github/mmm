@@ -12,7 +12,7 @@ namespace Mmm.Connectors.BluecoinConnector.Data
         [ExplicitKey]
         public long transactionsTableID { get; set; }
         public long itemID { get; set; }
-        public decimal amount { get; set; }
+        public long amount { get; set; }
         public string transactionCurrency { get; set; }
         public decimal conversionRateNew { get; set; } = 0;
         public DateTime date { get; set; }
