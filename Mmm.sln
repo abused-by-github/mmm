@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mmm.Converter", "Mmm.Conver
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mmm.Connectors.BluecoinConnector", "Mmm.Connectors.BluecoinConnector\Mmm.Connectors.BluecoinConnector.csproj", "{2E1E8E28-362E-40EE-A3F9-93229072EF55}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mmm.Helpers", "Mmm.Helpers\Mmm.Helpers.csproj", "{FC32C2A2-E94C-4D41-8210-DD11C89A1169}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{2E1E8E28-362E-40EE-A3F9-93229072EF55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E1E8E28-362E-40EE-A3F9-93229072EF55}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E1E8E28-362E-40EE-A3F9-93229072EF55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC32C2A2-E94C-4D41-8210-DD11C89A1169}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC32C2A2-E94C-4D41-8210-DD11C89A1169}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC32C2A2-E94C-4D41-8210-DD11C89A1169}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC32C2A2-E94C-4D41-8210-DD11C89A1169}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

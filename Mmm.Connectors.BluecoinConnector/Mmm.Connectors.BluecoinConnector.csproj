@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Mmm.Connectors.Api\Mmm.Connectors.Api.csproj" />
+    <ProjectReference Include="..\Mmm.Helpers\Mmm.Helpers.csproj" />
   </ItemGroup>
 
 </Project>
